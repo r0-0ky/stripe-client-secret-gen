@@ -1,11 +1,18 @@
 import express, { Express, Request, Response } from 'express';
 import Stripe from 'stripe';
 import dotenv from 'dotenv';
+import cors from 'cors';
 
 dotenv.config();
 
 const app: Express = express();
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string);
+
+app.use(cors({
+  origin: '*',
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
 
 app.post('/create-checkout-session', async (req: Request, res: Response) => {
   const session = await stripe.checkout.sessions.create({
