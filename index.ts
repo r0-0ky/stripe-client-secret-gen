@@ -14,6 +14,15 @@ app.use(cors({
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
+app.post('/create-payment-intent', async (req: Request, res: Response) => {
+  const paymentIntent = await stripe.paymentIntents.create({
+    amount: 2000, // сумма в центах
+    currency: 'usd'
+  });
+
+  res.json({ clientSecret: paymentIntent.client_secret });
+});
+
 app.post('/create-checkout-session', async (req: Request, res: Response) => {
   const session = await stripe.checkout.sessions.create({
     line_items: [
